@@ -17,7 +17,7 @@
 clear
 clc 
 % list all the fitted dataset
-foldpath='X:\Data\Cloudsat\TP\CLDCLASS_LD\';
+foldpath='X:\Data\Cloudsat\TP\CLASS_LD\';
 kind='2B-CLDCLASS-LIDAR';
 namestr=strcat(strcat('*',kind),'_GRANULE_P*.hdf');
 file=dir(strcat(foldpath,namestr));
@@ -49,7 +49,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ncloud=10
 for nl=1:ncloud  %nl,iv,ip,nr
-	 for iv=1:8
+	 for iv=1:13
 	  for nr=1:2
          ijx(nl,iv,nr)=0.0;
          rf_mean(nl,iv,nr)=0.0;
@@ -157,22 +157,27 @@ for n=1:nf
   late(1)=37.5;
   late(2)=37.5;
     nray=length(lat);
-    nbin=length(height(:,1));  
+    nbin=length(data(:,1));  
     for nt=1:nray
         if lon(nt)<lone(nr) & lon(nt)>lons(nr)  
           if lat(nt)<late(nr) & lat(nt)>lats(nr)
             if iv >1 
              for nl=1:nbin
-               if data(nl,nt)> valid_range(1) & data(nl,nt)< valid_range(2)
+                if isempty(valid_range)
+                rf_mean(nl,iv,nr)=rf_mean(nl,iv,nr)+data(nl,nt);
+                ijx(nl,iv,nr)=ijx(nl,iv,nr)+1.0;
+              else
+                if data(nl,nt)> valid_range(1) & data(nl,nt)< valid_range(2)
   %            if data_cpr(nl,nt)>5
                 rf_mean(nl,iv,nr)=rf_mean(nl,iv,nr)+data(nl,nt);
                 ijx(nl,iv,nr)=ijx(nl,iv,nr)+1.0;
- %            end % data_cpr
-              end %data_rf
+ %             end % data_cpr
+                end %data_rf
+             end
              end % nl
             end %%% if iv
            if iv==1 
-            cloudlayer(icl,nr,:)=data
+            cloudlayer(icl,nr,:)=data;
             icl=icl+1
            end
         end % if lat
@@ -199,13 +204,20 @@ fprintf(outxt,'%s  ','Height');
 fprintf(outxt,'%s  ','ETP');
 fprintf(outxt,'%s\n','WTP');
 for nl=1:nbin
-      for iv=1:vrnm
+      for iv=2:vrnm
           fprintf(outxt,'%f  ',rf_mean(nl,iv,k));
        end
    fprintf(outxt,'%f\n');
 end
 sta = fclose(outxt);
-
+fileOut=strcat(strcat('D:\MyPaper\PhD02\Data\EventsProfile_cloudsat_',kind),'ETP_cldLayer.txt');
+outxt=fopen(fileOut,'w');
+fprintf(outxt,'%f  ',cloudlayer(:,1,:));
+sta = fclose(outxt);
+fileOut=strcat(strcat('D:\MyPaper\PhD02\Data\EventsProfile_cloudsat_',kind),'WTP_cldLayer.txt');
+outxt=fopen(fileOut,'w');
+fprintf(outxt,'%f  ',cloudlayer(:,2,:));
+sta = fclose(outxt);
 %  References
 %
 % [1] http://www.cloudsat.cira.colostate.edu/dataSpecs.php
