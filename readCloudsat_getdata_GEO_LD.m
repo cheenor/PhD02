@@ -71,6 +71,17 @@ for i0=1:ldr
  ffnm{i0,1}=strcat(ysrp,jsysp);
  rain{2,i0}=evdate(i0,4);
 end
+days=new((/12/),integer)
+for i=1:12
+	days(i)=30
+end
+days(2)=28
+days(1)=31
+days(3)=31
+days(5)=31
+days(7)=31
+days(8)=31
+days(12)=31
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for i1=1:125 
   ijx(i1,1)=0.0;
@@ -103,7 +114,7 @@ rgns{1}='ETP';
 rgns{2}='WTP';
 varnm={};
 for ir=1:2
-  	for ifl=1:1
+      for ifl=1:1
       if ifl==1
         varnm=varnm1
         np=1;
@@ -113,8 +124,8 @@ for ir=1:2
         np=length(varnm(:,1));
         nv=length(varnm(1,:));
       end
-    	fileOut=strcat(pathout,rgns{ifl},'_EventsCloudsat_',SWATHNAME{ifl},'.txt');
-    	outxt=fopen(fileOut,'w');
+        fileOut=strcat(pathout,rgns{ifl},'_EventsCloudsat_',SWATHNAME{ifl},'.txt');
+        outxt=fopen(fileOut,'w');
       fprintf(outxt,'%s  ','height');
       fprintf(outxt,'%s  ','lon');
       fprintf(outxt,'%s  ','lat');
@@ -125,70 +136,74 @@ for ir=1:2
           end
 %       end
       fprintf(outxt,'%s\n','');
-    	file=dir(files{ifl});
-    	nf=length(file);
-    	for n=1:nf
-        	ss=0;
-        	for ix=1:ldr
-          		filename=file(n).name;
-          		ss=strfind(filename,ffnm{ix,ir});
-          		if ss > 0
+        file=dir(files{ifl});
+        nf=length(file);
+        for n=1:nf
+            ss=0;
+            for ix=1:ldr
+                  filename=file(n).name;
+                  ss=strfind(filename,ffnm{ix,ir});
+                  if ss > 0
                 irain=ix
-         			  break;
-          		end
-        	end %%%%  ix  
-        	ixx=n;
-        	if ss>0 
+                       break;
+                  end
+            end %%%%  ix  
+            ixx=n;
+            if ss>0 
 % Open the HDF-EOS2 Swath File.
-        		FILE_NAME = strcat(foldpath{ifl},file(n).name)
-        		file_id = hdfsw('open', FILE_NAME, 'rdonly')
-
+                FILE_NAME = strcat(foldpath{ifl},file(n).name)
+                file_id = hdfsw('open', FILE_NAME, 'rdonly')
+                cldsat_yy=str2num(FILE_NAME(1:4)) ;%YYYYDDDHHMMSS
+                cldsat_dd=str2num(FILE_NAME(5:7)) ;%YYYYDDDHHMMSS
+                cldsat_hh=str2num(FILE_NAME(8:9)) ;%YYYYDDDHHMMSS
+                cldsat_mm=str2num(FILE_NAME(10:11)) ;%YYYYDDDHHMMSS
+                cldsat_ss=str2num(FILE_NAME(12:13)) ;%YYYYDDDHHMMSS
 % Read data.
-        		SWATH_NAME =SWATHNAME{ifl} ;
-        		swath_id = hdfsw('attach', file_id, SWATH_NAME);
+                SWATH_NAME =SWATHNAME{ifl} ;
+                swath_id = hdfsw('attach', file_id, SWATH_NAME);
 
 % Read lat/lon/height/time data.
-        		[lon, status] = hdfsw('readfield', swath_id, 'Longitude', [], [], []);
-        		[lat, status] = hdfsw('readfield', swath_id, 'Latitude', [], [], []);
-        		[height, status] = hdfsw('readfield', swath_id, 'Height', [], [], []);
-        		[time, status] = hdfsw('readfield', swath_id, 'Profile_time', [], [], []);
+                [lon, status] = hdfsw('readfield', swath_id, 'Longitude', [], [], []);
+                [lat, status] = hdfsw('readfield', swath_id, 'Latitude', [], [], []);
+                [height, status] = hdfsw('readfield', swath_id, 'Height', [], [], []);
+                [time, status] = hdfsw('readfield', swath_id, 'Profile_time', [], [], []);
 
 % Make type double for plotting.
-        		lat=double(lat);
-        		lon=double(lon);
-        		time=double(time);        
-        		[units_h, status] = hdfsw('readattr', swath_id, ...
+                lat=double(lat);
+                lon=double(lon);
+                time=double(time);        
+                [units_h, status] = hdfsw('readattr', swath_id, ...
                        'Height.units');
 
-        		[units_t, status] = hdfsw('readattr', swath_id, ...
+                [units_t, status] = hdfsw('readattr', swath_id, ...
                        'Profile_time.units');
-        		[long_name_t, status] = hdfsw('readattr', swath_id, ...
+                [long_name_t, status] = hdfsw('readattr', swath_id, ...
                         'Profile_time.long_name');
 % Read attributes.
-        		rawdata={};
-        		valid_range={};
-        		for ip=1:np
-          			for iv=1:nv
-            			if ifl==1
+                rawdata={};
+                valid_range={};
+                for ip=1:np
+                      for iv=1:nv
+                        if ifl==1
                             varname=varnm{iv};
                         else
                             varname=varnm{ip,iv};
                         end                        
-            			DATAFIELD_NAME = varname;
-            			[data_var, status] = hdfsw('readfield', swath_id, DATAFIELD_NAME, [],[],[]);
-            			[long_name_var, status] = hdfsw('readattr', swath_id, ...
-                         	strcat(varname,'.long_name'));
-            			[units_fc, status] = hdfsw('readattr', swath_id, ...
-                       		strcat(varname,'.units'));
-            			[scale_factor_var, status] = hdfsw('readattr', swath_id, ...
+                        DATAFIELD_NAME = varname;
+                        [data_var, status] = hdfsw('readfield', swath_id, DATAFIELD_NAME, [],[],[]);
+                        [long_name_var, status] = hdfsw('readattr', swath_id, ...
+                             strcat(varname,'.long_name'));
+                        [units_fc, status] = hdfsw('readattr', swath_id, ...
+                               strcat(varname,'.units'));
+                        [scale_factor_var, status] = hdfsw('readattr', swath_id, ...
                             strcat(varname,'.factor'));
-            			scale_factor_var = double(scale_factor_var);
+                        scale_factor_var = double(scale_factor_var);
 
-            			[valid_range_var, status] = hdfsw('readattr', swath_id, ...
+                        [valid_range_var, status] = hdfsw('readattr', swath_id, ...
                             strcat(varname,'.valid_range'));
 %
 %
-            			data_var=double(data_var);
+                        data_var=double(data_var);
 % Process valid_range. Fill value and missing value will be handled by this
 % since they are outside of range values.
 
@@ -196,7 +211,7 @@ for ir=1:2
 %  data_cpr((data_cpr < valid_range_cpr(1)) | (data_cpr > valid_range_cpr(2))) = NaN;
 
 % Apply scale factor according to [1].
-            			data_var = data_var / scale_factor_var;
+                        data_var = data_var / scale_factor_var;
                         nvx=length(data_var(:,1));
                         nvy=length(data_var(1,:));
                         for invx=1:nvx
@@ -209,46 +224,94 @@ for ir=1:2
                             valid_range{iv,invrang}=valid_range_var(invrang);
                         end
 % Apply scale factor according to [1].
-          			end % iv
-        		end % ip
-        		hdfsw('detach', swath_id);
-        		hdfsw('close', file_id);
+                      end % iv
+                end % ip
+                hdfsw('detach', swath_id);
+                hdfsw('close', file_id);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        		nray=length(lat);
-        		nbin=length(height(:,1));  
-        		for nt=1:nray
-          			if lon(nt)<lone(ir) & lon(nt)>lons(ir)  
-            			if lat(nt)<late(ir) & lat(nt)>lats(ir)
-%               				for ip=1:np
-                  				for iv=1:nv 
-                    				for nl=1:nbin
-                      					if rawdata{iv,nl,nt}> valid_range{iv,1} & ...
-                      							rawdata{iv,nl,nt}< valid_range{iv,2}
+                nray=length(lat);
+                nbin=length(height(:,1));  
+                for nt=1:nray
+                      if lon(nt)<lone(ir) & lon(nt)>lons(ir)  
+                        if lat(nt)<late(ir) & lat(nt)>lats(ir)
+%                               for ip=1:np
+                                  for iv=1:nv 
+                                    for nl=1:nbin
+                                          if rawdata{iv,nl,nt}> valid_range{iv,1} & ...
+                                                  rawdata{iv,nl,nt}< valid_range{iv,2}
   %            if data_cpr(nl,nt)>5
-                        					rawdata{iv,nl,nt}=-9999.0;
-                      					end %%%%  if
-                    				end % nl
-                  				end % iv
-%                			end %ip  
-                			for nl=1:nbin
-                  				fprintf(outxt,'%f  ',height(nl,1));
-                  				fprintf(outxt,'%f  ',lon(nt));
-                  				fprintf(outxt,'%f  ',lat(nt));
-                          fprintf(outxt,'%f  ',rain(ir,irain));
-%                  				for ip=1:np
-                    				for iv=1:nv 
-                    					fprintf(outxt,'%f  ',rawdata{iv,nl,nt});
-                  					end
-%              	  				end
-              	  				fprintf(outxt,'%s\n','');
-                			end %%%%% nl
-            			end % if lat
-          			end % if lon
-        		end % nt
-      		end %%%% end ss
-     	end %%%% nt
-    	sta = fclose(outxt);
- 	end   %%% ifl
+                                            rawdata{iv,nl,nt}=-9999.0;
+                                          end %%%%  if
+                                    end % nl
+                                  end % iv
+%                            end %ip 
+%%%%%%%%%%%%%%%%%%%%%%%  verify the time 
+                                 dyear=365
+                                 days(2)=28
+                                 if mod(cldsat_yy,4)==0 & mod(cldsat_yy,100) ~=0
+                                 	dyear=366
+                                 	days(2)=29
+                                 elseif mod(cldsat_yy, 400)==0
+                                 	dyaer=366
+                                 	days(2)=29
+                                 end 	                                 			
+                                 sss=cldsat_ss+time(nt)
+                                 amin=sss/60.
+                                 amin=fix(amin)
+                                 smin= cldsat_mm+amin 
+                                 cldsat_mmd=mod(smin,60)
+                                 ahh = smin/60.
+                                 ahh = fix(ahh)
+                                 shh =ahh + cldsat_hh
+                                 cldsat_hhd=mod(shh,24)
+                                 add = shh/24.
+                                 add = fix(ahh)
+                                 sdd =add + cldsat_dd
+                                 cldsat_ddd=mod(sdd,dyear) %366
+                                 ayy=sdd/(dyear*1.0)
+                                 ayy=fix(ayy)
+                                 cldsat_yyd=cldsat_yy+ayy
+%%%%   the following coed convert  Julian day to date MM DD
+                                 julday=cldsat_ddd
+                                 tempday1=0
+                                 tempday2=0
+                                 for im=1:11
+                                     tempday1=tempday1+days(im) 
+                                     tempday2=tempday2+days(im)+days(im+1)
+                                     if julday-tempday1 > 0 & julday-tempday2<0
+                                     	mm=im+1
+                                     	dd=julday-tempay1
+                                     elseif julday-tempday1<1 & im==1
+                                     	mm=im
+                                     	dd= julday
+                                     end
+                                end	
+                                cldsat_mnd=mm
+                                cldsat_mnd=dd      	
+                          for nl=1:nbin
+                                    fprintf(outxt,'%d  ',cldsat_yyd);
+                                    fprintf(outxt,'%d  ',cldsat_mnd);
+                                    fprintf(outxt,'%d  ',cldsat_ddd);
+                                    fprintf(outxt,'%d  ',cldsat_hhd);
+                                    fprintf(outxt,'%d  ',cldsat_mmd);                            	
+                                    fprintf(outxt,'%f  ',height(nl,1));
+                                    fprintf(outxt,'%f  ',lon(nt));
+                                    fprintf(outxt,'%f  ',lat(nt));
+                                    fprintf(outxt,'%f  ',rain(ir,irain));
+%                                  for ip=1:np
+                                    for iv=1:nv 
+                                        fprintf(outxt,'%f  ',rawdata{iv,nl,nt});
+                                    end
+%                                    end
+                                    fprintf(outxt,'%s\n','');
+                            end %%%%% nl
+                        end % if lat
+                      end % if lon
+                end % nt
+              end %%%% end ss
+         end %%%% nt
+        sta = fclose(outxt);
+     end   %%% ifl
 end %%%  ir
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

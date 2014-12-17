@@ -150,11 +150,11 @@ for n=1:nf
         if lon(nt)<lone(nr) & lon(nt)>lons(nr)  
           if lat(nt)<late(nr) & lat(nt)>lats(nr)
            for nl=1:nbin
-           if data_rf(nl,nt)> -40.0 & data_rf(nl,nt)< 50.0
-  %            if data_cpr(nl,nt)>5
+           if data_rf(nl,nt)> -30.0 & data_rf(nl,nt)< 50.0
+              if data_cpr(nl,nt)>20
                 rf_mean(nl,nr)=rf_mean(nl,nr)+data_rf(nl,nt);
                 ijx(nl,nr)=ijx(nl,nr)+1.0;
- %            end % data_cpr
+             end % data_cpr
            end %data_rf
           end % nl
         end % if lat
