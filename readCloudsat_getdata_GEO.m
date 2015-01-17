@@ -20,31 +20,14 @@ clc
 
 %%%%
 varnm1={};
-varnm1{1}='CloudFraction';
-varnm1{2}='LayerBase';
-varnm1{3}='LayerTop';
+varnm1{1}='Radar_Reflectivity';
+varnm1{3}='CPR_Echo_Top';   %No Determination 0 Clear Profile 1 No hydrometeor layers found in CPR profile
+                            %High Cloud 2 Echo top pressure less than 500 mb.;
+                            %Mid Level cloud 3 Echo top pressure greater than 500 mb and echo top temperature colder than 273.
+                            %Low Level cloud 4 Echo top pressure greater than 500 mb and echo top temperature warmer than 273.
+                            %Multi Layer 5 Distinct combinations of above types 
+varnm1{2}='CPR_Cloud_mask';
 %%%%
-varnm2={};
-varnm2{1,1}='RVOD_liq_effective_radius';
-varnm2{1,2}='RVOD_liq_number_conc';
-varnm2{1,3}='RVOD_liq_water_content';
-varnm2{1,4}='RVOD_liq_water_path'; 
-varnm2{2,1}='RVOD_ice_effective_radius';
-varnm2{2,2}='RVOD_ice_number_conc';
-varnm2{2,3}='RVOD_ice_effective_radius'; 
-varnm2{2,4}='RVOD_ice_water_path'; 
-%%%%%%%  LO
-varnm2{1,5}='LO_RVOD_AP_geo_mean_radius';
-varnm2{1,6}='LO_RVOD_AP_number_conc';
-varnm2{1,7}='LO_RVOD_effective_radius';
-varnm2{1,8}='LO_RVOD_number_conc';
-varnm2{1,9}='LO_RVOD_liquid_water_content';
-%%%%% IO
-varnm2{2,5}='IO_RVOD_AP_log_geo_mean_diameter';
-varnm2{2,6}='IO_RVOD_AP_log_number_conc';
-varnm2{2,7}='IO_RVOD_effective_radius';
-varnm2{2,8}='IO_RVOD_log_number_conc';
-varnm2{2,9}='IO_RVOD_ice_water_content';
 %     read the envents date 
 input=importdata('D:\MyPaper\PhD02\Data\WTP_EventsDate_cloudsat_2010.txt');
 evdate=input.data;
@@ -92,13 +75,18 @@ end
 files={};
 foldpath={};
 yearstr='2010';
-foldpath{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
-foldpath{2}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
-files{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\*2B-GEOPROF-LIDAR_GRANULE_P*.hdf');
-files{2}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\*2B-CWC-RVOD_GRANULE_P*.hdf');
 SWATHNAME={};
 SWATHNAME{1}='2B-GEOPROF-LIDAR';
 SWATHNAME{2}='2B-CWC-RVOD';
+SWATHNAME{3}='2B-GEOPROF';
+for iys=2006:2010
+yearstr= num2str(iys,'%4.4i');  %%%X:\Data\Cloudsat\TP_May2Sep\GEO\2007
+foldpath{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
+foldpath{2}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
+foldpath{3}=strcat('X:\Data\Cloudsat\TP_May2Sep\GEO\',yearstr,'\');
+files{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\*2B-GEOPROF-LIDAR_GRANULE_P*.hdf');
+files{2}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\*2B-CWC-RVOD_GRANULE_P*.hdf');
+files{3}=strcat('X:\Data\Cloudsat\TP_May2Sep\GEO\',yearstr,'\*2B-GEOPROF_GRANULE_P*.hdf');
 %%%  selected for the region 
 %%%  ;;  ETP  lon 90-100   lat  30 37.5
 %%%%     WTP  lon 80-90   lat  30 37.5
@@ -116,7 +104,7 @@ rgns{2}='WTP';
 varnm={};
 for ipp=1:3
 for ir=1:2
-      for ifl=1:1
+      for ifl=3:3
 %      if ifl==1
 %        varnm=varnm1
 %        np=1;
@@ -244,18 +232,32 @@ for ir=1:2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 nray=length(lat);
                 nbin=length(height(:,1));
-                nxxx=length(data_var(:,1));               
+                nray=length(data_var(1,:))
+                nbin=length(data_var(:,1));
+                if nray==1 & nbin>124
+                    ntmp=nray
+                    nray=nbin;
+                    nbin=ntmp
+                end  
                 for nt=1:nray
                       if lon(nt)<lone(ir) & lon(nt)>lons(ir)  
                         if lat(nt)<late(ir) & lat(nt)>lats(ir)
 %                               for ip=1:np
 %                                  for iv=1:nv 
-                                    for nl=1:nxxx
-                                          if data_var(nl,nt)< valid_range_var(1) & ...
-                                                  data_var(nl,nt)> valid_range_var(2)
+                                    for nl=1:nbin
+                                        if nbin==1
+                                             if data_var(nt,nl)< valid_range_var(1) & ...
+                      							data_var(nt,nl)> valid_range_var(2)
   %            if data_cpr(nl,nt)>5
-                                            data_var(nl,nt)=-9999.0;
-                                          end %%%%  if
+                        					  data_var(nt,nl)=-9999.0;
+                                             end
+                                        else    
+                      					   if data_var(nl,nt)< valid_range_var(1) & ...
+                      							data_var(nl,nt)> valid_range_var(2)
+  %            if data_cpr(nl,nt)>5
+                        					data_var(nl,nt)=-9999.0;
+                      					   end %%%%  if
+                                        end
                                     end % nl
 %                                  end % iv
 %                            end %ip 
@@ -310,11 +312,16 @@ for ir=1:2
                          fprintf(outxt,'%d  ',cldsat_hhd);
                          fprintf(outxt,'%d  ',cldsat_mmd);                            	
                          fprintf(outxt,'%f  ',lon(nt));
-                         fprintf(outxt,'%f  ',lat(nt));
+%                         fprintf(outxt,'%f  ',lat(nt));
                          nxxx=length(data_var(:,1))
-                          for nl=1:nxxx
+                          for nl=1:nbin
+                              if nbin==1
+                                  fprintf(outxt,'%f  ',nl);
+                                   fprintf(outxt,'%f  ',data_var(nt,nl));
+                              else    
                                     fprintf(outxt,'%f  ',height(nl,nt));
                                     fprintf(outxt,'%f  ',data_var(nl,nt));
+                              end
 %                                    fprintf(outxt,'%f  ',rain{ir,irain});
 %                                  for ip=1:np
 %                                    for ivc=1:nv 
@@ -333,6 +340,7 @@ for ir=1:2
 end %%%  ir
 clear data_var
 end %%% ipp
+end %%%%% iyyy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %  References
