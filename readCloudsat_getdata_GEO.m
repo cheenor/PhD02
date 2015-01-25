@@ -151,7 +151,7 @@ for ir=1:2
 % Open the HDF-EOS2 Swath File.
                 FILE_NAME = strcat(foldpath{ifl},file(n).name);
                 file_id = hdfsw('open', FILE_NAME, 'rdonly');
-                icc=length(foldpath{1})+1;
+                icc=length(foldpath{ifl})+1;
                 cldsat_yy=str2num(FILE_NAME(icc:icc+3)) ;%YYYYDDDHHMMSS
                 cldsat_dd=str2num(FILE_NAME(icc+4:icc+6)) ;%(5:7)) ;%YYYYDDDHHMMSS
                 cldsat_hh=str2num(FILE_NAME(icc+7:icc+8));  %(8:9)) ;%YYYYDDDHHMMSS
@@ -312,8 +312,8 @@ for ir=1:2
                          fprintf(outxt,'%d  ',cldsat_hhd);
                          fprintf(outxt,'%d  ',cldsat_mmd);                            	
                          fprintf(outxt,'%f  ',lon(nt));
-%                         fprintf(outxt,'%f  ',lat(nt));
-                         nxxx=length(data_var(:,1))
+                         fprintf(outxt,'%f  ',lat(nt));
+%                         nxxx=length(data_var(:,1))
                           for nl=1:nbin
                               if nbin==1
                                   fprintf(outxt,'%f  ',nl);

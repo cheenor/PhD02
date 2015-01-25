@@ -117,7 +117,7 @@ pathout='D:\MyPaper\PhD02\Data\';
 rgns{1}='ETP';
 rgns{2}='WTP';
 ipp=1;
-for ipp=19:21
+for ipp=9:21
 for ir=1:2
   	for ifl=2:2
       varnm=varnm2{ipp};
@@ -156,7 +156,7 @@ for ir=1:2
 % Open the HDF-EOS2 Swath File.
         		FILE_NAME = strcat(foldpath{ifl},file(n).name);
         		file_id = hdfsw('open', FILE_NAME, 'rdonly');
-            icc=length(foldpath{1})+1;
+            icc=length(foldpath{ifl})+1;
             cldsat_yy=str2num(FILE_NAME(icc:icc+3)) ;%YYYYDDDHHMMSS
             cldsat_dd=str2num(FILE_NAME(icc+4:icc+6)); %(5:7)) ;%YYYYDDDHHMMSS
             cldsat_hh=str2num(FILE_NAME(icc+7:icc+8));  %(8:9)) ;%YYYYDDDHHMMSS
@@ -236,12 +236,12 @@ for ir=1:2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         		nray=length(lat);
         		nbin=length(height(:,1)); 
-                nray=length(data_var(1,:))
-                nbin=length(data_var(:,1))
+                nray=length(data_var(1,:));
+                nbin=length(data_var(:,1));
                 if nray==1 & nbin>124
-                    ntmp=nray
+                    ntmp=nray;
                     nray=nbin;
-                    nbin=ntmp
+                    nbin=ntmp;
                 end  
         		for nt=1:nray
           			if lon(nt)<lone(ir) & lon(nt)>lons(ir)  
@@ -255,7 +255,7 @@ for ir=1:2
   %            if data_cpr(nl,nt)>5
                         					  data_var(nt,nl)=-9999.0;
                                              end
-                                        else    
+                                        else 
                       					   if data_var(nl,nt)< valid_range_var(1) & ...
                       							data_var(nl,nt)> valid_range_var(2)
   %            if data_cpr(nl,nt)>5
@@ -325,7 +325,7 @@ for ir=1:2
                          if nbin==1
                             fprintf(outxt,'%f  ',nl);
                             fprintf(outxt,'%f  ',data_var(nt,nl));  
-                         else    
+                         else
                             if nxxx<nbin
                                fprintf(outxt,'%f  ',nl);
                                fprintf(outxt,'%f  ',data_var(nl,nt));
@@ -334,6 +334,10 @@ for ir=1:2
                                   fprintf(outxt1,'%f  ',height(nl,nt));
                                 end
                                fprintf(outxt,'%f  ',data_var(nl,nt));
+%                              if data_var(nl,nt)>0
+%                                  a=data_var(nl,nt)
+%                              pause(5)
+%                               end
                             end
                           end
 %                  				for ip=1:np
