@@ -19,8 +19,21 @@ clc
 % list all the fitted dataset
 
 %%%%
-varnm='cloud_scenario';
-
+varnm={};
+varnm{1}='Precip_rate'; % mm/h  
+varnm{2}='Conv_strat_flag';    %-2 - no determination possible due to shallow profile
+                               %-1 - no determination possible due to bad input data  %0 - no certain precipitation present
+                               %1 - convective precipitation
+                                %2 - stratiform precipitation %3 - shallow precipitation
+varnm{3}='Precip_flag';  % Flags for rain:
+                         %1 - possible %2 - probable  %3 - certain
+                         %Flags for snow:
+                         %4 - possible %5 - certain 
+                         %Flags for mixed:
+                         %6 - possible %7 - certain %9 - uncertain, see Status_flag
+varnm{4}='RLWP';           % Rain Liquid Water Path
+varnm{5}='CLWP';    %  Cloud Liquid Water Path
+varnm{6}='Near_surface_reflectivity'; 
 %     read the envents date 
 input=importdata('D:\MyPaper\PhD02\Data\WTP_EventsDate_cloudsat_2010.txt');
 evdate=input.data;
@@ -67,9 +80,9 @@ for i1=1:125
 end
 for iyyy=2006:2010
 yearstr = num2str(iyyy,'%4.4i')
-foldpath=strcat('X:\Data\Cloudsat\TP_May2Sep\2B_CLDCLASS\',yearstr,'\');
-files=strcat(foldpath,'*2B-CLDCLASS_GRANULE_P*.hdf');
-SWATHNAME='2B-CLDCLASS';
+foldpath=strcat('X:\Data\Cloudsat\TP_May2Sep\2C-PREI\',yearstr,'\');
+files=strcat(foldpath,'*2C-PRECIP-COLUMN_GRANULE_P*.hdf');
+SWATHNAME='2C-PRECIP-COLUMN';
 %%%  selected for the region 
 %%%  ;;  ETP  lon 90-100   lat  30 37.5
 %%%%     WTP  lon 80-90   lat  30 37.5
@@ -81,15 +94,15 @@ lone(1)=100.0;
 lone(2)=90.0;
 late(1)=37.5;
 late(2)=37.5;
-pathout='X:\Data\Cloudsat\TP_May2Sep\RAW\2B_CLDCLASS\';
+pathout='X:\Data\Cloudsat\TP_May2Sep\txt\';
 rgns{1}='ETP';
 rgns{2}='WTP';
 ipp=1;
-for ipp=1:1
+for ipp=1:6
 for ir=1:2
   	for ifl=1:1
 
-      fileOut=strcat(pathout,rgns{ir},'_Cloudsat_',SWATHNAME,'_',varnm,'_',yearstr,'.txt');
+      fileOut=strcat(pathout,rgns{ir},'_Cloudsat_',SWATHNAME,'_',varnm{ipp},'_',yearstr,'.txt');
       if ipp==1
         fileOut1=strcat(pathout,yearstr,rgns{ir},'Cloudsat_',SWATHNAME,'_date.txt');
         outxt1=fopen(fileOut1,'w');
@@ -104,7 +117,7 @@ for ir=1:2
         fprintf(outxt1,'%s\n','');
       end
       outxt=fopen(fileOut,'w');
-      fprintf(outxt,'%s  ',varnm);
+      fprintf(outxt,'%s  ',varnm{ipp});
       fprintf(outxt,'%s\n','');
       file=dir(files);
     	nf=length(file);
@@ -161,7 +174,7 @@ for ir=1:2
 %                        else
 %                            varname=varnm{ip,iv};
 %                        end                        
-                  varname=varnm;
+                  varname=varnm{ipp};
             			DATAFIELD_NAME = varname;
             			[data_var, status] = hdfsw('readfield', swath_id, DATAFIELD_NAME, [],[],[]);
             			[long_name_var, status] = hdfsw('readattr', swath_id, ...
@@ -203,7 +216,7 @@ for ir=1:2
         		hdfsw('close', file_id);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         		nray=length(lat);
-        		nbin=length(height(:,1)); 
+ %       		nbin=length(height(:,1)); 
                 nray=length(data_var(1,:));
                 nbin=length(data_var(:,1));
                 if nray==1 & nbin>124
@@ -292,17 +305,17 @@ for ir=1:2
                        nxxx=length(data_var(:,1));
                       for nl=1:nbin
                          if nbin==1
-                            fprintf(outxt,'%d  ',nl);
+                            fprintf(outxt,'%f  ',nl);
                             fprintf(outxt,'%f  ',data_var(nt,nl));  
                          else
                             if nxxx<nbin
-                               fprintf(outxt,'%d  ',nl);
-                               fprintf(outxt,'%d  ',data_var(nl,nt)); %dec2bin(data_var(nl,nt),16));
+                               fprintf(outxt,'%f  ',nl);
+                               fprintf(outxt,'%f  ',data_var(nl,nt));
                             else
 %                                if ipp==1  
 %                                  fprintf(outxt1,'%f  ',height(nl,nt));
 %                                end
-                               fprintf(outxt,'%d  ',data_var(nl,nt)); %dec2bin(data_var(nl,nt),16));
+                               fprintf(outxt,'%f  ',data_var(nl,nt));
 %                              if data_var(nl,nt)>0
 %                                  a=data_var(nl,nt)
 %                              pause(5)

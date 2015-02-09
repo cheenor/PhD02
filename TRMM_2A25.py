@@ -11,8 +11,20 @@ from netCDF4 import Dataset
 import gdal,ogr    ### osheo can't be imported with pyhdf
 from osgeo.gdalnumeric import *  
 from osgeo.gdalconst import *
-import osgeo  
-
+import osgeo 
+import numpy as np
+def pixel2coord(x, y,geoform):
+    """Returns global coordinates from pixel x, y coords"""
+    xoff=geoform[0]    
+    a=geoform[1]
+    b=geoform[2]
+    yoff=geoform[3]
+    d=geoform[4]
+    e=geoform[5]
+    xp = a * x + b * y + xoff
+    yp = d * x + e * y + yoff
+    return(xp, yp)
+# xoff, a, b, yoff, d, e = ds.GetGeoTransform()
 fpath="E:/Data/2010_2/2010121055002_21318_CS_2B-FLXHR-LIDAR_GRANULE_P2_R04_E03.hdf"
 toaobs=gdal.Open(fpath)
 listvar=toaobs.GetSubDatasets()
@@ -29,14 +41,13 @@ data1=BandReadAsArray(lon1)
 lon2=gb2.GetRasterBand(10)
 data2=BandReadAsArray(lon2)
 geoform=gb2.GetGeoTransform()
-xsize=lon2.XSize
-ysize=lon2.YSize
-lon=[]
-for i in range(0,xsize):
-    lon.append(i*geoform[1]+geoform[0])
-lat=[]
-for i in range(0,ysize):
-    lat.append(i*geoform[1]+geoform[0])
+nx=lon2.XSize
+ny=lon2.YSize
+lon=np.ndarray(shape=(nx,ny), dtype=float)
+lat=np.ndarray(shape=(nx,ny), dtype=float)
+for i in range(0,nx):
+    for j in range(0,ny):
+        print pixel2coord(i,j,geoform)
 """
 f=open('D:/Leanring/halfdegree_grb2.txt','w')
 iband="%s "%'BandNum'
