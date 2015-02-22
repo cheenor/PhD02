@@ -245,16 +245,68 @@ for ig in range(0,2):
             f.close()
 ##############################################################################
 #####            Plotting 
-#    total
-    mondtrs=['May','June','July','August','September','All Period']
+#    total   
     discld=[0,3,5,7]  
-    colors = ['b', 'grey', 'lightskyblue', 'm','g','r','orange','c']
+    colors = ['b', 'grey', 'orange','c','g','r','lime', 'm']
     labels=['Cr','As','Ac','St','Sc','Cu','Ns','DC']
-    width=[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5]
-    fig,axes = plt.subplots(nrows=3,ncols=2,figsize=(8,15))
+    width=[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5]    
     titlsize1=20
-    titlsize2=24
-    i=0
+    titlsize2=24    
+    fig,axes = plt.subplots(nrows=2,ncols=2,figsize=(13,10))
+    mondtrs=['May','Jun.','Jul.','Aug.','Sept.']
+    titlelbs=[r'($a$) ALL the Conditions',r'($b$) NoRain',r'($c$) Drizzle',r'($d$) Liquid+Soild']
+    indx = np.arange(5)   ### may to Sept.
+    for i in range(0,4):
+        k=i+1
+        ax=plt.subplot(2,2,k)
+        ax.set_ylim(0,100)
+        ax.set_xlim(0,5)
+        paxx=[]
+        if i==0 :
+            for ic in range(0,8):
+                if ic ==0 :
+                    paxx.append(plt.bar(indx, totalmon[:,ic],width=1.0,color=colors[ic]))
+                else:
+                    botm=np.ndarray(shape=(5),dtype=float)
+#                    botm=totalmon[:,ic-1]
+                    for ii in range(0,5):
+                        botm[ii]=0.
+                        for iii in range(0,ic):                            
+                            botm[ii]=totalmon[ii,iii]+botm[ii]
+                    paxx.append(plt.bar(indx, totalmon[:,ic],width=1.0,color=colors[ic],bottom=botm))
+#                    del botm
+            plt.ylabel(r'Frequency (%)',fontsize=titlsize1)
+            plt.title(titlelbs[i],fontsize=titlsize1)
+            plt.xticks(indx+0.5, mondtrs)
+            plt.yticks(np.arange(0,101,20))            
+        else:
+            j=i-1
+            for ic in range(0,8):
+                if ic ==0 :
+                    paxx.append(plt.bar(indx,rainmon[:,ic,j],width=1.0,color=colors[ic]))
+                else:
+                    botmx=np.ndarray(shape=(5),dtype=float)
+                    for ii in range(0,5):
+                        botmx[ii]=0.
+                        for iii in range(0,ic):                            
+                            botmx[ii]=rainmon[ii,iii,j]+botmx[ii]
+                    paxx.append(plt.bar(indx, rainmon[:,ic,j],width=1.0,color=colors[ic],bottom=botmx))
+#                    del botm
+            if i==2:
+                plt.ylabel(r'Frequency (%)',fontsize=titlsize1)
+            plt.title(titlelbs[i],fontsize=titlsize1)
+            plt.xticks(indx+0.5, mondtrs)
+            plt.yticks(np.arange(0,101,20))
+            if i==1:
+                plt.legend(paxx, labels,bbox_to_anchor=(1.015, 1), loc=2, borderaxespad=0.)
+#    fig.suptitle(raintype[j],size=titlsize2)
+    fig.subplots_adjust(hspace=0.4)
+    plt.show()
+    plt.savefig(pic_out+rgn[ig]+"_Bar_CloudPDF.pdf")
+    plt.close()     
+    """
+    mondtrs=['May','June','July','August','September','All Period']
+    fig,axes = plt.subplots(nrows=3,ncols=2,figsize=(8,15))
     for i in range(0,6):
         k=i+1
         plt.subplot(3,2,k)
@@ -326,28 +378,29 @@ for ig in range(0,2):
         plt.show()
         plt.savefig(pic_out+rgn[ig]+"_"+raintype[j]+'_CloudPDF.pdf')
         plt.close() 
+    """
     mondtrs=['May','June','July','August','September','All Period']
-    colors = ['b', 'grey', 'lightskyblue', 'm','g','r','orange','c']
+    colors = ['b', 'k', 'orange','c','g','r','lime', 'm']
     labels=['Cr','As','Ac','St','Sc','Cu','Ns','DC']
     discld2=[0,1,3,5,7]  
-    width=[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5]
+    width=[3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5]
     fig,axes = plt.subplots(nrows=2,ncols=3,figsize=(20,8))
     for inr in range(0,2):
         for inc in range(0,3):
 #    for ax in zip(axes):
 #        axes[i]=plt.subplots(2,3,i+1)
             axes[inr,inc].set_ylim(0,20)
-            axes[inr,inc].set_xlim(0,15)
+            axes[inr,inc].set_xlim(0,20)
             i=inr*3+inc
             if i <5 :
-                for ii in discld: #range(0,8):
+                for ii in range(0,8):    #discld: 
                     axes[inr,inc].plot(totalmonnz[i,ii,:],height[ig,:],label=labels[ii],
                         c=colors[ii],lw=width[ii])  #(5,8,nz)
                     axes[inr,inc].set_title(mondtrs[i],fontsize=titlsize1)
                     ylabs='Height'+r' ($km$)'
                     axes[inr,inc].set_ylabel(ylabs,size=titlsize1)
             else:
-                for ii in discld:  #range(0,8):
+                for ii in range(0,8):    #discld: 
                     axes[inr,inc].plot(totalallnz[ii,:],height[ig,:],label=labels[ii],
                         c=colors[ii],lw=width[ii])  #(5,8,nz)
                     axes[inr,inc].set_title(mondtrs[i],fontsize=titlsize1)
@@ -368,17 +421,17 @@ for ig in range(0,2):
             for inc in range(0,3):
 #            axes[i]=plt.subplots(2,3,i+1)
                 axes[inr,inc].set_ylim(0,20)
-                axes[inr,inc].set_xlim(0,15)
+                axes[inr,inc].set_xlim(0,20)
                 i=inr*3+inc
                 if i <5 :
-                    for ii in discld:    #range(0,8):
+                    for ii in range(0,8):    #discld:  
                         axes[inr,inc].plot(rainmonnz[i,ii,j,:],height[ig,:],label=labels[ii],
                             c=colors[ii],lw=width[ii])  #(5,8,nz)
                         axes[inr,inc].set_title(mondtrs[i],fontsize=titlsize1)
                         ylabs='Height'+r' ($km$)'
                         axes[inr,inc].set_ylabel(ylabs,size=titlsize1)
                 else:
-                    for ii in discld:         #range(0,8):
+                    for ii in range(0,8):    #discld: 
                         axes[inr,inc].plot(rainallnz[ii,j,:],height[ig,:],label=labels[ii],
                             c=colors[ii],lw=width[ii])  #(5,8,nz)
                         axes[inr,inc].set_title(mondtrs[i],fontsize=titlsize1)

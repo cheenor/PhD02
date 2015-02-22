@@ -48,6 +48,7 @@ lat=np.ndarray(shape=(nx,ny), dtype=float)
 for i in range(0,nx):
     for j in range(0,ny):
         print pixel2coord(i,j,geoform)
+dxx=[1,2,3,4,5,6,7,8,9,0]
 """
 f=open('D:/Leanring/halfdegree_grb2.txt','w')
 iband="%s "%'BandNum'

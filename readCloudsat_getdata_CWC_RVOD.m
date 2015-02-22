@@ -94,7 +94,9 @@ for i1=1:125
 end
 files={};
 foldpath={};
+for iyyy=2010:2010
 yearstr='2010';
+yearstr = num2str(iyyy,'%4.4i')
 foldpath{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
 foldpath{2}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
 files{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\*2B-GEOPROF-LIDAR_GRANULE_P*.hdf');
@@ -113,11 +115,11 @@ lone(1)=100.0;
 lone(2)=90.0;
 late(1)=37.5;
 late(2)=37.5;
-pathout='D:\MyPaper\PhD02\Data\';
+pathout='X:/Data/Cloudsat/TP_May2Sep/txt/';
 rgns{1}='ETP';
 rgns{2}='WTP';
 ipp=1;
-for ipp=9:21
+for ipp=1:21
 for ir=1:2
   	for ifl=2:2
       varnm=varnm2{ipp};
@@ -248,21 +250,21 @@ for ir=1:2
             			if lat(nt)<late(ir) & lat(nt)>lats(ir)
 %               				for ip=1:np
 %                  				for iv=1:nv 
-                    				for nl=1:nbin
-                                        if nbin==1
-                                             if data_var(nt,nl)< valid_range_var(1) & ...
-                      							data_var(nt,nl)> valid_range_var(2)
-  %            if data_cpr(nl,nt)>5
-                        					  data_var(nt,nl)=-9999.0;
-                                             end
-                                        else 
-                      					   if data_var(nl,nt)< valid_range_var(1) & ...
-                      							data_var(nl,nt)> valid_range_var(2)
-  %            if data_cpr(nl,nt)>5
-                        					data_var(nl,nt)=-9999.0;
-                      					   end %%%%  if
-                                        end
-                    				end % nl
+%                    				for nl=1:nbin
+%                                        if nbin==1
+%                                             if data_var(nt,nl)< valid_range_var(1) & ...
+%                      							data_var(nt,nl)> valid_range_var(2)
+%  %            if data_cpr(nl,nt)>5
+%                        					  data_var(nt,nl)=-9999.0;
+%                                             end
+%                                        else 
+%                      					   if data_var(nl,nt)< valid_range_var(1) & ...
+%                      							data_var(nl,nt)> valid_range_var(2)
+%  %            if data_cpr(nl,nt)>5
+%                        					data_var(nl,nt)=-9999.0;
+%                      					   end %%%%  if
+%                                        end
+%                    				end % nl
 %                  				end % iv
 %                			end %ip 
  %%%%%%%%%%%%%%%%%%%%%%%  verify the time 
@@ -364,6 +366,7 @@ for ir=1:2
   sta1 = fclose(outxt1);
   end 
 end %%%% ipp
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

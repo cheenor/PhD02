@@ -114,7 +114,7 @@ pathout='D:\MyPaper\PhD02\Data\';
 rgns{1}='ETP';
 rgns{2}='WTP';
 varnm={};
-for ipp=1:3
+for ipp=2:2
 for ir=1:2
       for ifl=1:1
 %      if ifl==1
@@ -244,7 +244,7 @@ for ir=1:2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 nray=length(lat);
                 nbin=length(height(:,1));
-                nxxx=length(data_var(:,1));               
+                nxxx=length(data_var(:,1))               
                 for nt=1:nray
                       if lon(nt)<lone(ir) & lon(nt)>lons(ir)  
                         if lat(nt)<late(ir) & lat(nt)>lats(ir)

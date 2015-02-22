@@ -104,7 +104,7 @@ pathout='X:\Data\Cloudsat\TP_May2Sep\RAW\2B_CLDCLASS-LIDAR\';
 rgns{1}='ETP';
 rgns{2}='WTP';
 ipp=1;
-for ipp=1:10
+for ipp=6:6
 for ir=1:2
   	for ifl=1:1
 
@@ -224,7 +224,7 @@ for ir=1:2
         		nray=length(lat);
         		nbin=length(height(:,1)); 
             nray=length(data_var(1,:));
-            nbin=length(data_var(:,1));
+            nbin=length(data_var(:,1))
             if nray==1 & nbin>124
               ntmp=nray;
               nray=nbin;
