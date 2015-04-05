@@ -142,6 +142,10 @@ for ig=1:2
             iv=WantedIndex(i);
             varname=head.Vgroup(1,2).SDS(1,j).Name;
             tmp=hdfread(FILE_NAME,varname);
+
+
+
+            %% *scale_factor + add_offset  neeed!!!!!!
             for nt=1:nray
                 for ns=1:nscan
                     if lon(nt,ns)<lone(ig) & lon(nt,ns)>lons(ig)  
