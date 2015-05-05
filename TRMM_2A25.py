@@ -41,6 +41,8 @@ data1=BandReadAsArray(lon1)
 lon2=gb2.GetRasterBand(10)
 data2=BandReadAsArray(lon2)
 geoform=gb2.GetGeoTransform()
+lc_data2=gb2.GetRasterBand(204)
+lc2=BandReadAsArray(lc_data2)
 nx=lon2.XSize
 ny=lon2.YSize
 lon=np.ndarray(shape=(nx,ny), dtype=float)
