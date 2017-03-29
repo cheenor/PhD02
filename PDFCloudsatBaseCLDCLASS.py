@@ -13,8 +13,8 @@ import numpy as np
 mpl.rcParams['ytick.labelsize'] = 20
 mpl.rcParams['xtick.labelsize'] = 20
 
-dirin ="D:/MyPaper/PhD02/Data/CloudSat/"
-pic_out="D:/MyPaper/PhD02/Pics/"
+dirin ="D:/Work/MyPaper/PhD02/Data/CloudSat/"
+pic_out="D:/Work/MyPaper/PhD02/Pics/"
 
 nz=105
 rgn=['ETP','WTP']
@@ -23,7 +23,7 @@ fnm=['-TotalCloudPDF_baseon_CLDCLASS_AllPeriod.txt',
 cldname=['Cirrus','Altostratus','Altocumulus','Stratus',
     'Stratuscumulus','Cumulus','Nimbostratus','Deep Convection']
 discld=[0,3,5,7]  
-raintype=['NoRain','Drizzle','Liquid+Soild']
+raintype=['NoRain','Drizzle','Liquid+Solid']
 #####################################################################
 onedim1=[]
 linesplit=[]
@@ -302,7 +302,7 @@ for ig in range(0,2):
 #    fig.suptitle(raintype[j],size=titlsize2)
     fig.subplots_adjust(hspace=0.4)
     plt.show()
-    plt.savefig(pic_out+rgn[ig]+"_Bar_CloudPDF.pdf")
+    plt.savefig(pic_out+rgn[ig]+"_Bar_CloudPDF_new_2.png",dpi=450)
     plt.close()     
     """
     mondtrs=['May','June','July','August','September','All Period']
@@ -410,7 +410,7 @@ for ig in range(0,2):
     fig.suptitle(raintype[j],size=titlsize2)
     fig.subplots_adjust(hspace=0.4)
     plt.show()
-    plt.savefig(pic_out+rgn[ig]+'_Allcondition_CloudPDF_profiles.pdf')
+    plt.savefig(pic_out+rgn[ig]+'_Allcondition_CloudPDF_profiles_new_2.png',dpi=450)
     plt.close()
     for j in range(0,3):
         fig,axes = plt.subplots(nrows=2,ncols=3,figsize=(20,8))
@@ -441,5 +441,5 @@ for ig in range(0,2):
         fig.suptitle(raintype[j],size=titlsize2)
         fig.subplots_adjust(hspace=0.4)
         plt.show()
-        plt.savefig(pic_out+rgn[ig]+'_'+raintype[j]+'_CloudPDF_profiles.pdf')
+        plt.savefig(pic_out+rgn[ig]+'_'+raintype[j]+'_CloudPDF_profiles_new_2.png',dpi=450)
         plt.close()        

@@ -40,31 +40,31 @@ varnm{10}='PrecipitationFlag'; % -1 = not determined   0 = no precipitation
                               % 1 = liquid precipitation  2 = solid precipitation
                               %3 = possible drizzle (?)
 %     read the envents date 
-input=importdata('D:\MyPaper\PhD02\Data\WTP_EventsDate_cloudsat_2010.txt');
-evdate=input.data;
-ldr=length(evdate(:,1));
-ldc=length(evdate(1,:));
+%input=importdata('D:\MyPaper\PhD02\Data\WTP_EventsDate_cloudsat_2010.txt');
+%evdate=input.data;
+%ldr=length(evdate(:,1));
+%ldc=length(evdate(1,:));
 %  convert the date to Julian day
-ffnm={};
-rain={};
-for i0=1:ldr
- y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
- ysrp = num2str(y(1),'%4.4i');
- jsysp = num2str(y(2),'%3.3i');
- ffnm{i0,2}=strcat(ysrp,jsysp);
- rain{1,i0}=evdate(i0,4);
-end
-input=importdata('D:\MyPaper\PhD02\Data\ETP_EventsDate_cloudsat_2010.txt');
-evdate=input.data;
-ldr=length(evdate(:,1));
-ldc=length(evdate(1,:));
-for i0=1:ldr
- y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
- ysrp = num2str(y(1),'%4.4i');
- jsysp = num2str(y(2),'%3.3i');
- ffnm{i0,1}=strcat(ysrp,jsysp);
- rain{2,i0}=evdate(i0,4);
-end
+%ffnm={};
+%rain={};
+%for i0=1:ldr
+% y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
+% ysrp = num2str(y(1),'%4.4i');
+% jsysp = num2str(y(2),'%3.3i');
+% ffnm{i0,2}=strcat(ysrp,jsysp);
+% rain{1,i0}=evdate(i0,4);
+%end
+%input=importdata('D:\MyPaper\PhD02\Data\ETP_EventsDate_cloudsat_2010.txt');
+%evdate=input.data;
+%ldr=length(evdate(:,1));
+%ldc=length(evdate(1,:));
+%for i0=1:ldr
+% y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
+% ysrp = num2str(y(1),'%4.4i');
+% jsysp = num2str(y(2),'%3.3i');
+% ffnm{i0,1}=strcat(ysrp,jsysp);
+% rain{2,i0}=evdate(i0,4);
+%end
 days=[];
 for i=1:12
 	days(i)=30;
@@ -83,10 +83,10 @@ for i1=1:125
   ijx(i1,2)=0.0;
   rf_mean(i1,2)=0.0;
 end
-for iyyy=2006:2010
-yearstr='2010';
+for iyyy=2012:2012
+%yearstr='2012';
 yearstr = num2str(iyyy,'%4.4i')
-foldpath=strcat('X:\Data\Cloudsat\TP_May2Sep\2B_CLDCLASS-LIDAR\',yearstr,'\');
+foldpath=strcat('K:\DATA\CloudSat\',yearstr,'05-09\');
 files=strcat(foldpath,'*2B-CLDCLASS-LIDAR_GRANULE_P*.hdf');
 SWATHNAME='2B-CLDCLASS-LIDAR';
 %%%  selected for the region 
@@ -100,11 +100,11 @@ lone(1)=100.0;
 lone(2)=90.0;
 late(1)=37.5;
 late(2)=37.5;
-pathout='X:\Data\Cloudsat\TP_May2Sep\RAW\2B_CLDCLASS-LIDAR\';
+pathout='K:\DATA\CloudSat\TXT\2B_CLDCLASS-LIDAR\';
 rgns{1}='ETP';
 rgns{2}='WTP';
 ipp=1;
-for ipp=6:6
+for ipp=1:6
 for ir=1:2
   	for ifl=1:1
 

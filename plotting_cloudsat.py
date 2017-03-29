@@ -121,7 +121,7 @@ for nm in range(0,nf-1):
             ax.set_ylabel('Height (km)')
             plt.legend((rgns[0],rgns[1]), loc='upper right')
             plt.show()
-            plt.savefig(dirout+fnms[nm]+vrnms[iv]+'.pdf')
+            plt.savefig(dirout+fnms[nm]+vrnms[iv]+'.png',dpi=450)
             plt.close()
     if fnms[nm] == 'CWC_RVOD':
         fig,ax = plt.figure(figsize=(8,10))
@@ -144,6 +144,6 @@ for nm in range(0,nf-1):
             ax.set_ylabel('Height (km)')
             plt.legend((rgns[0],rgns[1]), loc='upper right')
             plt.show()
-            plt.savefig(dirout+fnms[nm]+vrnms[iv]+'.pdf')
+            plt.savefig(dirout+fnms[nm]+vrnms[iv]+'.png',dpi=450)
             plt.close()
         

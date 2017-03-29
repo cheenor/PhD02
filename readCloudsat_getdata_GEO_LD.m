@@ -46,31 +46,31 @@ varnm2{2,7}='IO_RVOD_effective_radius';
 varnm2{2,8}='IO_RVOD_log_number_conc';
 varnm2{2,9}='IO_RVOD_ice_water_content';
 %     read the envents date 
-input=importdata('D:\MyPaper\PhD02\Data\WTP_EventsDate_cloudsat_2010.txt');
-evdate=input.data;
-ldr=length(evdate(:,1));
-ldc=length(evdate(1,:));
+%input=importdata('D:\MyPaper\PhD02\Data\WTP_EventsDate_cloudsat_2010.txt');
+%evdate=input.data;
+%ldr=length(evdate(:,1));
+%ldc=length(evdate(1,:));
 %  convert the date to Julian day
-ffnm={};
-rain={};
-for i0=1:ldr
- y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
- ysrp = num2str(y(1),'%4.4i');
- jsysp = num2str(y(2),'%3.3i');
- ffnm{i0,2}=strcat(ysrp,jsysp);
- rain{1,i0}=evdate(i0,4);
-end
-input=importdata('D:\MyPaper\PhD02\Data\ETP_EventsDate_cloudsat_2010.txt');
-evdate=input.data;
-ldr=length(evdate(:,1));
-ldc=length(evdate(1,:));
-for i0=1:ldr
- y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
- ysrp = num2str(y(1),'%4.4i');
- jsysp = num2str(y(2),'%3.3i');
- ffnm{i0,1}=strcat(ysrp,jsysp);
- rain{2,i0}=evdate(i0,4);
-end
+%ffnm={};
+%rain={};
+%for i0=1:ldr
+% y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
+% ysrp = num2str(y(1),'%4.4i');
+% jsysp = num2str(y(2),'%3.3i');
+% ffnm{i0,2}=strcat(ysrp,jsysp);
+% rain{1,i0}=evdate(i0,4);
+%end
+%input=importdata('D:\MyPaper\PhD02\Data\ETP_EventsDate_cloudsat_2010.txt');
+%evdate=input.data;
+%ldr=length(evdate(:,1));
+%ldc=length(evdate(1,:));
+%for i0=1:ldr
+% y=julia(evdate(i0,1),evdate(i0,2),evdate(i0,3));
+% ysrp = num2str(y(1),'%4.4i');
+% jsysp = num2str(y(2),'%3.3i');
+% ffnm{i0,1}=strcat(ysrp,jsysp);
+% rain{2,i0}=evdate(i0,4);
+%end
 days=[];
 for i=1:12
 	days(i)=30;
@@ -91,11 +91,11 @@ for i1=1:125
 end
 files={};
 foldpath={};
-yearstr='2010';
-foldpath{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
-foldpath{2}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\');
-files{1}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\*2B-GEOPROF-LIDAR_GRANULE_P*.hdf');
-files{2}=strcat('X:\Data\Cloudsat\TP_May2Sep\',yearstr,'\*2B-CWC-RVOD_GRANULE_P*.hdf');
+yearstr='2012';
+foldpath{1}=strcat('K:\DATA\CloudSat\',yearstr,'05-09\');
+foldpath{2}=strcat('K:\DATA\CloudSat\',yearstr,'05-09\');
+files{1}=strcat('K:\DATA\CloudSat\',yearstr,'05-09\','\*2B-GEOPROF-LIDAR_GRANULE_P*.hdf');
+files{2}=strcat('K:\DATA\CloudSat\',yearstr,'05-09\','\*2B-CWC-RVOD_GRANULE_P*.hdf');
 SWATHNAME={};
 SWATHNAME{1}='2B-GEOPROF-LIDAR';
 SWATHNAME{2}='2B-CWC-RVOD';
